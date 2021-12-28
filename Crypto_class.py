@@ -198,7 +198,7 @@ def get_p_l(portfolio, in_price_coins, final_price_coins):
 
 class Cryptos:
 
-    def __init__(self, choice, _budget, _hodl):
+    def __init__(self, choice, _budget, _n_coins, _hodl):
 
         if choice:
             # loads the top100 coins
@@ -213,6 +213,7 @@ class Cryptos:
 
         self.budget = _budget
         self.hodl = _hodl
+        self._n_coins = _n_coins
         self.p_l = int()
         self.selected_coins_of_past = []
         self.selected_coins = []
@@ -244,7 +245,7 @@ class Cryptos:
 
     def get_prices_df(self):
 
-        self.coins = self.coins[:n_coins]  # cheating -->stupid patch for coinmarket rate limit
+        self.coins = self.coins[:self._n_coins]  # cheating -->stupid patch for coinmarket rate limit
 
         cryptos_list = []
 
@@ -404,16 +405,17 @@ if __name__ == "__main__":
     budget = 100
     hodl = True
     scrap = False
-    crypto_class = Cryptos(top_100, budget, hodl)
+    crypto_class_20c = Cryptos(top_100, budget, n_coins, hodl)
 
-    crypto_class.get_prices_df()
-    crypto_class.get_market_cap_df()
-    crypto_class.validate_from_past(n_coins, n_days, mu_method, cov_method, obj_function, drop, scrap)
-    crypto_class.optimize_portfolio(n_coins, mu_method, cov_method, obj_function, drop, scrap)
+    crypto_class_20c.get_prices_df()
+    crypto_class_20c.get_market_cap_df()
+    crypto_class_20c.validate_from_past(n_coins, n_days, mu_method, cov_method, obj_function, drop, scrap)
+    crypto_class_20c.optimize_portfolio(n_coins, mu_method, cov_method, obj_function, drop, scrap)
     print(f'\nn_coins={n_coins}\n')
-    print(crypto_class.portfolio)
+    print(crypto_class_20c.portfolio)
 
     n_coins = 10
-    crypto_class.optimize_portfolio(n_coins, mu_method, cov_method, obj_function, drop, scrap)
+    crypto_class_10c = Cryptos(top_100, budget, n_coins, hodl)
+    crypto_class_10c.optimize_portfolio(n_coins, mu_method, cov_method, obj_function, drop, scrap)
     print(f'\nn_coins={n_coins}\n')
-    print(crypto_class.portfolio)
+    print(crypto_class_10c.portfolio)
